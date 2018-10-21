@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Escapar Demo</title>
+    <meta name="description" content="Escapar">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-animation-component@3.2.2/dist/aframe-animation-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@4.0.1/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.6.0/dist/aframe-look-at-component.min.js"></script>
+    <script src="https://unpkg.com/super-hands@2.1.0/dist/super-hands.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
+    <script src="utils.js"></script>
+    <script src="systems/assistant.js"></script>
+    <script src="systems/wishlist.js"></script>
+    <script src="systems/app-state.js"></script>
+    <script src="components/on-controller.js"></script>
+    <script src="components/assistant.js"></script>
+    <script src="components/deep-visible.js"></script>
+    <script src="components/nav-bar.js"></script>
+    <script src="components/splash.js"></script>
+    <script src="components/onboarding.js"></script>
+    <script src="components/home.js"></script>
+    <script src="components/experience.js"></script>
+    <script src="components/packages.js"></script>
+    <script src="components/wishlist.js"></script>
+    <script src="components/purchase.js"></script>
+  </head>
+  <body>
+    <a-scene debug>
+      <a-assets>
+        <!-- Common -->
+        <img id="background-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fbackground2.jpg?1520975609228"/>
+        <audio id="click-sound" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/audio/click.ogg"></audio>
+
+        <!-- Splash -->
+        <video id="logo" webkit-playsinline playsinline crossorigin="anonymous" loop="false" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2FEscapar%20logo%20animation.mp4?1516746131534"></video>
+
+        <!-- Onboarding -->
+        <img id="onboard-01-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fonboarding%201.png?1521502779573"/>
+        <img id="onboard-02-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fonboarding%202.png?1521502779573"/>
+        <img id="onboard-03-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fonboarding%203.png?1521502779573"/>
+        <img id="onboard-04-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fonboarding%204.png?1521502779573"/>
+
+        <audio id="onboard-01-sound" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fonboarding1.mp3?1521504180752"></audio>
+        <audio id="onboard-02-sound" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fonboarding2.mp3?1521504180752"></audio>
+        <audio id="onboard-03-sound" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fonboarding3.mp3?1521504180752"></audio>
+        <audio id="onboard-04-sound" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fonboarding4.mp3?1521504180752"></audio>
+        <audio id="lets-begin-sound" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fhome.mp3?1521504180752"></audio>
+
+        <img id="button-next" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fbutton%20next.png?1521502831034"/>
+        <img id="button-begin" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fbutton%20begin.png?1521502831034"/>
+        <img id="down-arrow" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fdown-arrow.png?1520283878348"/>
+
+        <!-- Nav Bar -->
+        <img id="home-button-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fhome%20icon.png?1521577753078"/>
+        <img id="back-button-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fback%20icon.png?1521577753078"/>
+        <img id="assistant-button-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fassistant%20icon.png?1521577753078"/>
+        <img id="wishlist-button-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fwishlist%20icon.png?1521577753078"/>
+        <img id="assistant-icon-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fassistant-icon.png?1520647301430"/>
+        <img id="user-icon-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fuser-icon.png?1520647301336"/>
+
+        <audio id="answer-wishlist-redirect-sound" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fassistant-what-is-in-wishlist.mp3?1521504181086"></audio>
+        <audio id="answer-wishlist-empty-sound" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fassistant-wishlist-empty.mp3?1521504181086"></audio>
+        <audio id="answer-popular-destination-sound" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fassistant-popular-destination.mp3?1521504181086"></audio>
+        <audio id="answer-where-should-i-stay-sound" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fassistant-where-should-i-stay.mp3?1521504181086"></audio>
+        <audio id="answer-where-else-sound" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fassistant-where-else.mp3?1521504181086"></audio>
+
+        <!-- Home -->
+        <img id="home-01-img" crossorigin="anonymous" src="images/Ballaback.png"/>
+        <img id="home-02-img" crossorigin="anonymous" src="images/Downtown.png"/>
+        <img id="home-03-img" crossorigin="anonymous" src="images/Byblos.png"/>
+        <img id="home-04-img" crossorigin="anonymous" src="images/Sidon.png"/>
+
+        <video id="home-01-video" webkit-playsinline playsinline crossorigin="anonymous" loop="false" src="footage/files/MainMenu Baalback.mp4"></video>
+        <video id="home-02-video" webkit-playsinline playsinline crossorigin="anonymous" loop="false" src="footage/files/DOWNTOWEN 1M.mp4"></video>
+        <video id="home-03-video" webkit-playsinline playsinline crossorigin="anonymous" loop="false" src="footage/files/BYBLOS 1m.mp4"></video>
+        <video id="home-04-video" webkit-playsinline playsinline crossorigin="anonymous" loop="false" src="footage/files/Sidon.mp4"></video>
+
+        <!-- Experience -->
+        <video id="experience-video" webkit-playsinline playsinline crossorigin="anonymous" loop="false" src="footage/files/MainMenu Baalback.mp4"></video>
+        <img id="poi-01-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fpoi%20icon.png?1521503154558"/>
+        <img id="poi-02-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fpoi%20icon%202.png?1521661130792"/>
+        <img id="info-card-01-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fpoi%20card.png?1521503159741"/>
+        <img id="info-card-02-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fpoi%20card%202.png?1521661133086"/>
+        <img id="dismiss-button-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fbutton%20dismiss.png?1521503157644"/>
+        <img id="add-to-wishlist-button-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fbutton%20add.png?1521661129759"/>
+        <audio id="info-card-sound" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Finfocard.mp3?1521504176749"></audio>
+        <!-- <img id="background-img" crossorigin="anonymous" src="https://cdn.glitch.com/a72fecb3-5596-49de-9d11-bd02d4069948%2F360%20bg%20image.jpg?1517526397358"/> -->
+
+        <!-- Purchase -->
+        <img id="purchase-card-01-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fpayment%201.png?1521503662778"/>
+        <video id="purchase-card-02-img" webkit-playsinline playsinline crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fpayment%202.mp4?1521503739776"></video>
+        <img id="confirm-button-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fbutton%20confirm.png?1521503662454"/>
+
+        <audio id="purchase-card-01-sound" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fpayment1.mp3?1521504178241"></audio>
+
+        <!-- Wishlist -->
+        <img id="wishlist-card-01-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fwishlist%201.png?1521503559458"/>
+        <img id="wishlist-card-02-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fwishlist%202.png?1521503559458"/>
+        <img id="wishlist-card-03-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fwishlist%203.png?1521666964565"/>
+        <img id="purchase-button-short-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fbutton%20purchase%20wishlist.png?1521660884973"/>
+
+        <!-- Packages -->
+        <img id="package-card-01-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fpackage%201.png?1521660799624"/>
+        <img id="package-card-02-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fpackage%202.png?1521660799624"/>
+        <img id="purchase-added-overlay-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fadded%20overlay.png?1521503321073"/>
+        <img id="purchase-button-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fbutton%20purchase.png?1521660799624"/>
+        <img id="add-wishlist-button-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fbutton%20add.png?1521503321073"/>
+        <img id="remove-wishlist-button-img" crossorigin="anonymous" src="https://cdn.glitch.com/9bbd8f88-e606-49fe-805c-9913e11537fc%2Fbutton%20remove.png?1521503321073"/>
+
+        <a-mixin id="clickable"
+          animation__click="startEvents: click; property: position; from: 0 0 0; to: 0 0 -0.2; dur: 200; repeat: 1; dir: alternate"
+          sound="on: click; src: #click-sound; volume: 10"
+        ></a-mixin>
+
+        <a-mixin id="anim"
+          animation__active="property: scale; startEvents: active; from: 1 1 1; to: 1.4 1.4 1; dur: 150"
+          animation__inactive="property: scale; startEvents: inactive; from: 1 1 1; to: 1.4 1.4 1; dur: 150; dir: reverse"
+        ></a-mixin>
+      </a-assets>
+
+      <a-entity splash></a-entity>
+
+      <a-entity onboarding></a-entity>
+
+      <a-entity home></a-entity>
+
+      <a-entity experience></a-entity>
+
+      <a-entity packages></a-entity>
+
+      <a-entity wishlist></a-entity>
+
+      <a-entity purchase></a-entity>
+
+      <a-entity nav-bar
+        on-controller__rotate="controller: #controller; property: nav-bar.rotateWithCamera; value: true"
+        on-controller__assistant="controller: #controller; property: nav-bar.showAssistant; value: false"
+      ></a-entity>
+
+      <a-entity
+        id="controller"
+        laser-controls
+        raycaster="objects: .clickable"
+        line="color: orange"
+      ></a-entity>
+
+      <a-entity camera look-controls>
+        <a-cursor id="gaze-cursor"
+          objects=".clickable"
+          on-controller__class="controller: #controller; property: objects; value: .unclickable"
+          on-controller__visible="controller: #controller; property: visible; value: false"
+          animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150"
+          animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1500"
+          event-set__enter="_event: mouseenter; color: springgreen"
+          event-set__leave="_event: mouseleave; color: black"
+          fuse="false"
+        ></a-cursor>
+        <a-entity assistant="controller: #controller"></a-entity>
+      </a-entity>
+    </a-scene>
+    <h1 id="click_to_start" style="color: white; position: absolute; top: 50%; bottom:50%; left:50%; right: 50%; width: 216px;">Click To Start</h1>
+    <script type="application/javascript">
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('serviceworker.js');
+      }
+    </script>
+  </body>
+</html>
